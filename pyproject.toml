@@ -8,5 +8,6 @@ dependencies = [
     "apache-airflow>=3.1.2",
     "dbt-duckdb>=1.10.0",
     "duckdb>=1.4.1",
+    "openai>=1.0.0",
 ]
 
