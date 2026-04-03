@@ -198,6 +198,15 @@ The agent runs a 3-stage pipeline:
 - **Required research coverage** — the gatherer must attempt all five GTM context areas before finishing.
 - **Strategy inferred** — no if/else rules; the drafter LLM picks the approach from the data.
 
+## Known Issues
+
+- **Schema hallucination in SQL generation** — the gatherer LLM frequently generates SQL with incorrect schema/table references despite receiving the correct catalog. Common failure patterns:
+  - **Invented schemas**: e.g. `sales.opportunities` when `sales` does not exist (should be `raw.opportunities` or a marts table).
+  - **Missing schema qualifiers**: e.g. `FROM leads` instead of `FROM raw.leads`.
+  - **Wrong schema prefix on staging tables**: e.g. `marts.stg_calls` when `stg_*` tables live in `staging`, not `marts`.
+- **Ineffective error recovery** — when a query fails, the `catalog_hint` with correct table names is sent back, but the model often repeats the same mistakes across retries until the turn budget is exhausted.
+- **Model sensitivity** — smaller or less instruction-following models (e.g. `qwen2.5:7b`) are more prone to these errors. 
+
 ## Limitations
 
 - **Ambiguous entity resolution** — if multiple accounts or people match the same name, the agent may choose the wrong record without an explicit disambiguation step.
@@ -218,3 +227,5 @@ The agent runs a 3-stage pipeline:
 - **Lazy schema exploration** — start with a lightweight table list and let the gatherer request detail on only the tables it needs, reducing prompt size and cost.
 - **Brief caching with freshness rules** — reuse a gathered `IntelligenceBrief` for a short window (e.g. 24 hours) unless new warehouse activity appears.
 - **Evaluation harness** — score generated emails on factual accuracy, personalization depth, CTA clarity, and tone consistency across a test set.
+- **SQL schema validation** — pre-check generated SQL table/schema references against the catalog before executing, and reject invalid queries with a targeted correction instead of relying on database error messages.
+- **Stronger model or few-shot examples** — switch to a more capable model (e.g. Claude, GPT-4o) or add few-shot SQL examples to the gatherer prompt showing correct schema-qualified table references.
