@@ -19,7 +19,7 @@ uv sync
 
 ### 2. Configure your LLM provider
 
-Create `agent/.env` from the example and set your provider:
+Create `agent/.env` from the example and set your provider (Check detailed Instruction from .env.example):
 
 ```bash
 cp agent/.env.example agent/.env
@@ -32,7 +32,7 @@ cp agent/.env.example agent/.env
 OPENAI_API_KEY=sk-your-real-key
 ```
 
-**Option B — Ollama (local):**
+**Option B — Ollama (local) -- Current Solution Incorporates Local Ollama:**
 
 ```bash
 # Start the server and pull a model first:
