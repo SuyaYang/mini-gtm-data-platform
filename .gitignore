@@ -11,6 +11,7 @@ sources/postgres/*.csv
 warehouse/*.duckdb
 
 # Airflow runtime
+airflow/airflow.cfg
 airflow/airflow.db
 airflow/logs/
 
